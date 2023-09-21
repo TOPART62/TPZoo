@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooAPI", "ZooAPI\ZooAPI.csproj", "{3B01019D-72E4-4F75-B4DC-42EFD8C7CCC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZooAPI", "ZooAPI\ZooAPI.csproj", "{3B01019D-72E4-4F75-B4DC-42EFD8C7CCC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooBlazor", "ZooBlazor\ZooBlazor.csproj", "{5586E1B3-3244-436C-965A-66C079E497DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZooBlazor", "ZooBlazor\ZooBlazor.csproj", "{5586E1B3-3244-436C-965A-66C079E497DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooCore", "ZooCore\ZooCore.csproj", "{9A8BED40-9D94-4E11-8142-9751AD09A452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZooCore", "ZooCore\ZooCore.csproj", "{9A8BED40-9D94-4E11-8142-9751AD09A452}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

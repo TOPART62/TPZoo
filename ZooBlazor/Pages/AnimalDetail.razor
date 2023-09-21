@@ -1,0 +1,39 @@
+﻿@page "/animals/{animalId:int}"
+@using ZooBlazor.Services;
+@using ZooCore.Models;
+
+<div class="container">
+    <h3>Détails de l'Animal</h3>
+
+    @if (animal != null)
+    {
+        <div class="card">
+            <img src="@animal.ImageURL" class="card-img-top" alt="@animal.Name">
+            <div class="card-body">
+                <h5 class="card-title">@animal.Name</h5>
+                <p class="card-text">Espèce : @animal.Espece</p>
+                <p class="card-text">Âge : @animal.Age ans</p>
+                <p class="card-text">Description : @animal.Description</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>L'animal n'a pas été trouvé.</p>
+    }
+</div>
+
+@code {
+    private Animal animal;
+
+    [Parameter]
+    public int AnimalId { get; set; }
+
+    [Inject]
+    private AnimalService animalService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        animal = animalService.GetAnimalById(AnimalId);
+    }
+}
