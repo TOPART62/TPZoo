@@ -11,4 +11,6 @@ builder.Services.AddSingleton<AnimalService>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+builder.Services.AddScoped<UserService>();
+
 await builder.Build().RunAsync();
