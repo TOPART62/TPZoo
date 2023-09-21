@@ -1,9 +1,77 @@
 ﻿@page "/"
+@using ZooBlazor.Services;
+@using ZooCore.Datas
+@using Microsoft.Extensions.DependencyInjection
+@using System.Linq
+@using ZooCore.Models;
 
-<PageTitle>Index</PageTitle>
+<div class="container">
+    <h1>Bienvenue au Zoo M2I</h1>
 
-<h1>Hello, world!</h1>
+    <h3>Liste des Animaux</h3>
 
-Welcome to your new app.
+    <div class="form-group">
+        <label for="sortCriteria">Trier par :</label>
+        <select class="form-control" id="sortCriteria" @bind="selectedSortCriteria">
+            <option value="name">Nom</option>
+            <option value="espece">Espèce</option>
+            <option value="age">Âge</option>
+        </select>
+    </div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th><button class="btn btn-link" @onclick="SortAnimals">Nom</button></th>
+                <th><button class="btn btn-link" @onclick="SortAnimals">Espèce</button></th>
+                <th><button class="btn btn-link" @onclick="SortAnimals">Âge</button></th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var animal in sortedAnimals)
+            {
+                <tr>
+                    <td>@animal.Name</td>
+                    <td>@animal.Espece</td>
+                    <td>@animal.Age</td>
+                    <td><a class="btn btn-primary" href="/animals/@animal.Id">Détails</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private List<Animal> animals;
+    private List<Animal> sortedAnimals;
+    private string selectedSortCriteria = "name";
+
+    [Inject]
+    private AnimalService animalService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        animals = animalService.GetAnimals();
+        SortAnimals();
+    }
+
+    private void SortAnimals()
+    {
+        switch (selectedSortCriteria)
+        {
+            case "name":
+                sortedAnimals = animals.OrderBy(a => a.Name).ToList();
+                break;
+            case "espece":
+                sortedAnimals = animals.OrderBy(a => a.Espece.ToString()).ToList();
+                break;
+            case "age":
+                sortedAnimals = animals.OrderBy(a => a.Age).ToList();
+                break;
+            default:
+                sortedAnimals = animals.OrderBy(a => a.Name).ToList();
+                break;
+        }
+    }
+}
