@@ -1,7 +1,7 @@
-﻿using PizzAPI.Validators;
+﻿using ZooCore.Validators;
 using System.ComponentModel.DataAnnotations;
 
-namespace PizzAPI.DTOs
+namespace ZooAPI.DTOs
 {
     public class LoginRequestDTO
     {
