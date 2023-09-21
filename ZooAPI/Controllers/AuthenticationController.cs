@@ -17,7 +17,7 @@ namespace ZooAPI.Controllers
     {
         private readonly IRepository<User> _userRepository;
         private readonly AppSettings _settings;
-        private readonly string _securityKey = "clé super secrète";
+        private readonly string _securityKey = "la clé super secrète de la pokemon api";
         public AuthenticationController(IRepository<User> userRepository,
             IOptions<AppSettings> appSettings)
         {
@@ -35,7 +35,7 @@ namespace ZooAPI.Controllers
             // pour restreindre la création d'admins : isAdmin = false
 
             if (await _userRepository.Add(user) > 0) 
-                return Ok("User regitered.");
+                return Ok("User registered.");
             return BadRequest("Something went wrong...");
         }
 

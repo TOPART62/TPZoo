@@ -9,7 +9,7 @@ namespace ZooAPI.Datas
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Animal> Animals{ get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> User { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace ZooAPI.Datas
                 PhoneNumber = "01 01 01 01 01",
                 Address = "2 rue tartempion 55555 Bidule",
                 Email = "root@pokecorp.com",
-                PassWord = "UEFzczAwKytsYSBjbMOpIHN1cGVyIHNlY3LDqHRlIGRlIGxhIHBva2Vtb24gYXBp",
+                PassWord = "UEFzczAwKytsYSBjbMOpIHN1cGVyIHNlY3LDqHRlIGRlIGxhIHBva2Vtb24gYXBp", // PAss00++
                 IsAdmin = true
             };
             modelBuilder.Entity<User>().HasData(adminRoot);

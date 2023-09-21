@@ -16,7 +16,7 @@ namespace ZooAPI.Repositories
         // CREATE
         public async Task<int> Add(User user)
         {
-            var addedObj = await _dbContext.Users.AddAsync(user);
+            var addedObj = await _dbContext.User.AddAsync(user);
             await _dbContext.SaveChangesAsync();
             return addedObj.Entity.Id;
         }
@@ -24,19 +24,19 @@ namespace ZooAPI.Repositories
         // READ
         public async Task<User?> GetById(int id)
         {
-            return await _dbContext.Users.FindAsync(id);
+            return await _dbContext.User.FindAsync(id);
         }
         public async Task<User?> Get(Expression<Func<User, bool>> predicate)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(predicate);
+            return await _dbContext.User.FirstOrDefaultAsync(predicate);
         }
         public async Task<List<User>> GetAll()
         {
-            return await _dbContext.Users.ToListAsync();
+            return await _dbContext.User.ToListAsync();
         }
         public async Task<List<User>> GetAll(Expression<Func<User, bool>> predicate)
         {
-            return await _dbContext.Users.Where(predicate).ToListAsync();
+            return await _dbContext.User.Where(predicate).ToListAsync();
         }
 
         // UPDATE
@@ -71,7 +71,7 @@ namespace ZooAPI.Repositories
             var user = await GetById(id);
             if (user == null)
                 return false;
-            _dbContext.Users.Remove(user);
+            _dbContext.User.Remove(user);
             return await _dbContext.SaveChangesAsync() > 0;
         }
     }
