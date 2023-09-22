@@ -1,77 +1,109 @@
 ﻿@page "/"
-@using ZooBlazor.Services;
-@using ZooCore.Datas
-@using Microsoft.Extensions.DependencyInjection
-@using System.Linq
-@using ZooCore.Models;
+@using System.Globalization;
+@using ZooBlazor.DTOs;
+@using Microsoft.AspNetCore.Components;
 
-<div class="container">
-    <h1>Bienvenue au Zoo M2I</h1>
+
+<h1>Bienvenue au Zoo M2I</h1>
+<div class="container-fluid">
+    {
+
 
     <h3>Liste des Animaux</h3>
 
-    <div class="form-group">
-        <label for="sortCriteria">Trier par :</label>
-        <select class="form-control" id="sortCriteria" @bind="selectedSortCriteria">
-            <option value="name">Nom</option>
-            <option value="espece">Espèce</option>
-            <option value="age">Âge</option>
-        </select>
+    <div class="row text-center">
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="admin" @bind="IsAdminMode" />
+            <label class="custom-control-label" for="admin">Mode admin</label>
+        </div>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th><button class="btn btn-link" @onclick="SortAnimals">Nom</button></th>
-                <th><button class="btn btn-link" @onclick="SortAnimals">Espèce</button></th>
-                <th><button class="btn btn-link" @onclick="SortAnimals">Âge</button></th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var animal in sortedAnimals)
-            {
-                <tr>
-                    <td>@animal.Name</td>
-                    <td>@animal.Espece</td>
-                    <td>@animal.Age</td>
-                    <td><a class="btn btn-primary" href="/animals/@animal.Id">Détails</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-@code {
-    private List<Animal> animals;
-    private List<Animal> sortedAnimals;
-    private string selectedSortCriteria = "name";
-
-    [Inject]
-    private AnimalService animalService { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    @if (IsAdminMode)
     {
-        animals = animalService.GetAnimals();
-        SortAnimals();
-    }
+        <div class="row">
+            <button class="btn btn-success" @onclick="AddAnimal"><i class="bi bi-plus-square"></i>&ensp; Ajouter un Animal</button>
+        </div>
 
-    private void SortAnimals()
-    {
-        switch (selectedSortCriteria)
+        @if (AnimalToEdit != null)
         {
-            case "name":
-                sortedAnimals = animals.OrderBy(a => a.Name).ToList();
-                break;
-            case "espece":
-                sortedAnimals = animals.OrderBy(a => a.Espece.ToString()).ToList();
-                break;
-            case "age":
-                sortedAnimals = animals.OrderBy(a => a.Age).ToList();
-                break;
-            default:
-                sortedAnimals = animals.OrderBy(a => a.Name).ToList();
-                break;
+            <EditForm OnValidSubmit="SubmitAnimal" Model="AnimalToEdit">
+                <DataAnnotationsValidator />
+                <div class="form-row">
+                    <div class="form-group" style="width:100%">
+                        <label for="name">Nom:</label>
+                        <InputText class="form-control" id="name" placeholder="Saisir le nom" @bind-Value="AnimalToEdit.Name" />
+                        <small><ValidationMessage For="() => this.AnimalToEdit.Name" /></small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="width:100%">
+                        <label for="espece">Espece :</label>
+                        <InputText class="form-control" id="espece" placeholder="Saisir l'espece'" @bind-Value="AnimalToEdit.EspeceString" />
+                        <small><ValidationMessage For="() => this.AnimalToEdit.AnimalString" /></small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="width:100%">
+                        <label for="age">Age</label>
+                        <InputNumber class="form-control" id="age" placeholder="Saisir l'age" @bind-Value="AnimalToEdit.Age" />
+                        <small><ValidationMessage For="() => this.AnimalToEdit.PAge" /></small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="width:100%">
+                        <label for="description">Description:</label>
+                        <InputText class="form-control" id="description" placeholder="Saisir une description" @bind-Value="AnimalToEdit.Description" />
+                        <small><ValidationMessage For="() => this.AnimalToEdit.Description" /></small>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="width:100%">
+                            <label for="imageUrl">Lien vers l'image:</label>
+                            <InputText class="form-control" id="imageUrl" placeholder="Saisir le lien vers l'image" @bind-Value="AnimalToEdit.ImageURL" />
+                            <small><ValidationMessage For="() => this.AnimalToEdit.ImageURL" /></small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="btn btn-primary">Validation</button>
+                    </div>
+            </EditForm>
         }
     }
-}
+    <div class="row">
+        <div class="col-8">
+            @LoadingMessage
+            @foreach (var animal in AnimalList)
+            {
+                <div class="row p-2">
+                    <div class="col-2">
+                        <img src="@animal.ImageURL" style="width:100%" />
+                    </div>
+                    <div class="col">
+                        <h5 class="text-warning text-uppercase font-weight-bold">@animal.Name</h5>
+                        <small class="font-italic">@string.Join(", ", animal)</small>
+                    </div>
+                    <div class="col-2">
+                        <h5 class="text-primary font-weight-bold">@animal.Espece</h5>
+                    </div>
+                    <div class="col-2">
+                        <h5 class="text-primary font-weight-bold">@animal.Age</h5>
+                    </div>
+
+                    <div class="col-2">
+                        <h5 class="text-primary font-weight-bold">@animal.Description</h5>
+                        <div class="row p-2">
+                            <button class="col btn btn-success" @onclick="()=>AddToCart(animal)"><i class="bi bi-basket2-fill"></i></button>
+                            @if (IsAdminMode)
+                            {
+                                <button class="col btn text-primary border-primary" @onclick="() => EditAnimal(animal)"><i class="bi bi-pencil-square"></i></button>
+                                <button class="col btn btn-danger" @onclick="() => DeleteAnimal(animal.Id)"><i class="bi bi-trash3"></i></button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+
+</div>

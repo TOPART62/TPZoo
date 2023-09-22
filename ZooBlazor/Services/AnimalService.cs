@@ -1,59 +1,48 @@
-﻿using ZooCore.Models;
+﻿using System.Net.Http.Json;
+using System.Threading.Tasks;
+using ZooCore.Models;
 
 namespace ZooBlazor.Services
 {
-    public class AnimalService
+    public class AnimalService : IAnimalService
     {
-        private List<Animal> _animals; 
+        private readonly HttpClient _httpClient;
+        private readonly string _baseApiRoute;
 
-        public AnimalService()
+        public AnimalService(HttpClient httpClient)
         {
-           
-            _animals = new List<Animal>
-            {
-            new Animal{ Id =1, Name ="Bacon", Espece= Espece.Elephant, Age = 30, Description = "Elephant",ImageURL = "/images/bacon.jpg"  },
-            new Animal{ Id =2, Name ="Lardon", Espece= Espece.Tigre, Age = 10, Description = "Tigre Lardon",ImageURL = "/images/bacon.jpg"  },
-            new Animal{ Id =3, Name ="Jambon", Espece= Espece.Dromadaire, Age = 15, Description = "Dromadaire Jambon",ImageURL = "/images/bacon.jpg"  },
-            new Animal{ Id =4, Name ="Saucisson", Espece= Espece.Serpent, Age = 20, Description = "Serpent Saucisson",ImageURL = "/images/bacon.jpg"  },
-            };
+            _httpClient = httpClient;
+            _baseApiRoute = "/api/animals"; 
         }
 
-        public List<Animal> GetAnimals()
+        public async Task<List<Animal>> GetAll()
         {
-            return _animals;
+            var result = await _httpClient.GetFromJsonAsync<List<Animal>>(_baseApiRoute);
+            return result!;
         }
 
-        public Animal GetAnimalById(int id)
+        public async Task<Animal?> Get(int id)
         {
-            return _animals.FirstOrDefault(a => a.Id == id);
+            var result = await _httpClient.GetFromJsonAsync<Animal>(_baseApiRoute + $"/{id}");
+            return result;
         }
 
-        public void AddAnimal(Animal animal)
+        public async Task<bool> Post(Animal animal)
         {
-            animal.Id = _animals.Max(a => a.Id) + 1;
-            _animals.Add(animal);
+            var result = await _httpClient.PostAsJsonAsync(_baseApiRoute, animal);
+            return result.IsSuccessStatusCode;
         }
 
-        public void UpdateAnimal(Animal updatedAnimal)
+        public async Task<bool> Put(Animal animal)
         {
-            var existingAnimal = _animals.FirstOrDefault(a => a.Id == updatedAnimal.Id);
-            if (existingAnimal != null)
-            {
-                existingAnimal.Name = updatedAnimal.Name;
-                existingAnimal.Espece = updatedAnimal.Espece;
-                existingAnimal.Age = updatedAnimal.Age;
-                existingAnimal.Description = updatedAnimal.Description;
-                existingAnimal.ImageURL = updatedAnimal.ImageURL;
-            }
+            var result = await _httpClient.PutAsJsonAsync(_baseApiRoute + $"/{animal.Id}", animal);
+            return result.IsSuccessStatusCode;
         }
 
-        public void DeleteAnimal(int id)
+        public async Task<bool> Delete(int id)
         {
-            var animalToDelete = _animals.FirstOrDefault(a => a.Id == id);
-            if (animalToDelete != null)
-            {
-                _animals.Remove(animalToDelete);
-            }
+            var result = await _httpClient.DeleteAsync(_baseApiRoute + $"/{id}");
+            return result.IsSuccessStatusCode;
         }
     }
 }

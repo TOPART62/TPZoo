@@ -13,8 +13,11 @@ namespace ZooBlazor.DTOs
         public Espece Espece { get; set; } = Espece.Nothing;
         [Required(ErrorMessage = "L'Age est requis.")]
         public int Age { get; set; }
+        [Required(ErrorMessage = "La description est requis.")]
+        public string? Description { get; set; }
         [Required(ErrorMessage = "Le lien vers l'image est requis.")]
-        public string? ImageLink { get; set; }
+
+        public string? ImageURL { get; set; }
        
         
     }

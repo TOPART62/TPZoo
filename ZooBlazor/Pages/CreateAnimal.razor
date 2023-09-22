@@ -1,8 +1,8 @@
 ﻿@page "/createanimal"
 @using ZooBlazor.Services;
-@using ZooCore.Models
-@inject AnimalService animalService
-@inject NavigationManager navigationManager
+@using ZooCore.Models;
+@inject AnimalService animalService;
+@inject NavigationManager navigationManager;
 
 <h1>Création d'un nouvel animal</h1>
 
@@ -35,15 +35,12 @@
         <InputText id="Description" class="form-control" @bind-Value="newAnimal.Description" />
     </div>
 
-   @*  <div class="form-group">
-        <div class="form-group" style="width:100%">
-            <label for=" ImageURL">Lien vers l'image:</label>
-            <InputText class="form-control" id=" ImageURL" placeholder="Saisir le lien vers l'image" @bind-Value="AnimalToEdit.ImageURL" />
-            <small><ValidationMessage For="() => this.AnimalToEdit.ImageURL" /></small>
-        </div> *@
+    <div class="form-group">
+        <label for="ImageURL">Lien vers l'image</label>
+        <InputText id="ImageURL" class="form-control" @bind-Value="newAnimal.ImageURL" />
+    </div>
 
-
-        <button type="submit" class="btn btn-primary">Créer</button>
+    <button type="submit" class="btn btn-primary">Créer</button>
 </EditForm>
 
 @code {
@@ -51,7 +48,7 @@
 
     private void CreateNewAnimal()
     {
-        animalService.AddAnimal(newAnimal);
+        animalService.Put(newAnimal);
         navigationManager.NavigateTo("/");
     }
 }
