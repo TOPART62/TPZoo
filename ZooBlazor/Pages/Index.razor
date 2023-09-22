@@ -4,6 +4,8 @@
 @using Microsoft.AspNetCore.Components;
 @using ZooBlazor.Services;
 @using ZooCore.Models;
+@inject Blazored.LocalStorage.ILocalStorageService _localStorage;
+@inject NavigationManager Navigator;
 
 
 <h1>Bienvenue au Zoo M2I</h1>
@@ -12,15 +14,24 @@
 
     <h3>Liste des Animaux</h3>
 
-    <div class="row text-center">
+    <!--<div class="row text-center">
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="admin" @bind="IsAdminMode" />
             <label class="custom-control-label" for="admin">Mode admin</label>
         </div>
-    </div>
-
-    @if (IsAdminMode)
+    </div>-->
+    @if (User is not null)
     {
+        <h4>Vous êtes connecté(e) en tant que @User.FullName</h4>
+        <button type="button" @onclick="LogOut" class="btn btn-danger">Se déconnecter...</button>
+    } else
+    {
+        <a href="@(Navigator.BaseUri)login" class="btn btn-success">Se connecter</a>
+    }
+
+    @if (User is not null && IsAdminMode)
+    {
+
         <div class="row">
             <button class="btn btn-success" @onclick="AddAnimal"><i class="bi bi-plus-square"></i>&ensp; Ajouter un Animal</button>
         </div>
@@ -64,9 +75,9 @@
                         </div>
                     </div>
                 </div>
-                    <div class="form-row">
-                        <button type="submit" class="btn btn-primary">Validation</button>
-                    </div>
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary">Validation</button>
+                </div>
             </EditForm>
         }
     }

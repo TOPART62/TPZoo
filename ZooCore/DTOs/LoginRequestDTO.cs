@@ -9,7 +9,7 @@ namespace ZooCore.DTOs
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email address")]
         public string? Email { get; set; }
         [Required]
-        [PasswordValidator]
+        //[PasswordValidator]
         public string? PassWord { get; set; }
     }
 }

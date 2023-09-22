@@ -13,7 +13,7 @@ namespace ZooBlazor.Pages
         public IAnimalService AnimalService { get; set; }
 #nullable enable
         private string? LoadingMessage { get; set; }
-        private bool IsAdminMode { get; set; } = false;
+        private bool IsAdminMode { get; set; }
         private Dictionary<Animal, int> Cart { get; set; } = new Dictionary<Animal, int>();
 
         private List<Animal> AnimalList { get; set; } = new();
@@ -24,11 +24,14 @@ namespace ZooBlazor.Pages
             Post,
             Put
         }
+        private User User { get; set; }
         protected override async Task OnInitializedAsync()
         {
             LoadingMessage = "Récupération des Animaux...";
             AnimalList = await AnimalService.GetAll();
             LoadingMessage = "";
+            User = await _localStorage.GetItemAsync<User>("user");
+            IsAdminMode = User is not null ? User.IsAdmin : false;
         }
 
         private void AddToCart(Animal animal)
@@ -94,6 +97,12 @@ namespace ZooBlazor.Pages
             }
 
             AnimalToEdit = null;
+        }
+
+        private async void LogOut()
+        {
+            await _localStorage.RemoveItemAsync("user");
+            Navigator.NavigateTo(Navigator.Uri, forceLoad: true); //actualiser après déconnexion
         }
     }
 }
