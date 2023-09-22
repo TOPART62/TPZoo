@@ -1,21 +1,60 @@
-﻿@page "/Login"
-@using ZooBlazor.Services;
-@using ZooBlazor.DTOs
+﻿@using ZooBlazor.Services;
+@using ZooCore.DTOs;
+
+@inject NavigationManager Navigator;
+
+@page "/login"
 
 <h3>Login</h3>
-<form method="post" asp-page="Index">
-    <table>
-        <tr>
-            <td>User</td>
-            <td><input type="text" asp-for="User" /></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="password" asp-for="Password" /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" value="Login" /></td>
-        </tr>
-    </table>
-</form>
+
+@if (!success)
+{
+    <EditForm OnValidSubmit="LoginUser" Model="User">
+        <DataAnnotationsValidator />
+        <div class="form-row">
+            <div class="form-group">
+                <label for="user">Email</label>
+                <InputText class="form-control" id="email" placeholder="Email : " @bind-Value="User.Email" />
+                <small><ValidationMessage For="() => this.User.Email" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="password">Mot de passe : </label>
+                <InputText class="form-control" id="password" placeholder="Mot de passe" @bind-Value="User.PassWord" />
+                <small><ValidationMessage For="() => this.User.PassWord" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <button type="submit" class="btn btn-primary" style="margin-top:10px">Login</button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <h3>Connexion OK !!! Votre token est @token</h3>
+    <a href="@Navigator.BaseUri" class="btn btn-success">Retour ...</a>
+}
+@if (error)
+{
+    <h4 class="text-danger">Une erreur est survenue!</h4>
+}
+
+@code {
+    [Inject]
+    public UserService UserService { get; set; }
+
+    private LoginRequestDTO User = new LoginRequestDTO();
+    private bool success = false;
+    private bool error = false;
+    string token;
+
+    private async void LoginUser()
+    {
+        token = await UserService.Login(User);
+        if (token.Equals("Invalid Authentication!"))
+            error = true;
+        else
+            success = true;
+    }
+}

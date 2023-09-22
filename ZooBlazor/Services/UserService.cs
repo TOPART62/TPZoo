@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Security.AccessControl;
 using ZooBlazor.DTOs;
+using ZooCore.DTOs;
 using ZooCore.Models;
 
 namespace ZooBlazor.Services
@@ -23,7 +24,7 @@ namespace ZooBlazor.Services
             return result.IsSuccessStatusCode;
         }
 
-        public async Task<string> Login(User user)
+        public async Task<string> Login(LoginRequestDTO user)
         {
             var result = await _httpClient.PostAsJsonAsync(_baseApiRoute + $"/Login", user);
             var dto = await result.Content.ReadFromJsonAsync<UserLoginDTO>();
