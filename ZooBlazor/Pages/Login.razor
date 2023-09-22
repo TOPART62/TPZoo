@@ -1,4 +1,5 @@
-﻿@using ZooBlazor.Services;
+﻿@using ZooBlazor.DTOs;
+@using ZooBlazor.Services;
 @using ZooCore.DTOs;
 @using ZooCore.Models;
 
@@ -59,15 +60,15 @@ else if(success)
 
     protected override async Task OnInitializedAsync()
     {
-        LoggedIn = await LocalStorage.GetItemAsync<User>("user");
-        if(LoggedIn is not null) Console.WriteLine(LoggedIn.FullName);
+        var dto = await LocalStorage.GetItemAsync<UserLoginDTO>("user");
+        if(dto is not null) LoggedIn = dto.User;
         StateHasChanged();
     }
 
     private async void LoginUser()
     {
-        LoggedIn = await UserService.Login(User);
-        if (LoggedIn is null)
+        var result = await UserService.Login(User);
+        if (result is null)
         {
             error = true;
             success = false;
@@ -77,7 +78,9 @@ else if(success)
         {
             success = true;
             error = false;
+            LoggedIn = result.User;
             await LocalStorage.SetItemAsync("user", LoggedIn);
+            await LocalStorage.SetItemAsync("jwt", result.Token);
         }
         StateHasChanged();
 

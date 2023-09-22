@@ -24,11 +24,16 @@ namespace ZooBlazor.Services
             return result.IsSuccessStatusCode;
         }
 
-        public async Task<User> Login(LoginRequestDTO user)
+        public async Task<UserLoginDTO> Login(LoginRequestDTO user)
         {
             var result = await _httpClient.PostAsJsonAsync(_baseApiRoute + $"/Login", user);
-            var dto = await result.Content.ReadFromJsonAsync<UserLoginDTO>();
-            return dto.User;
+            if (result.IsSuccessStatusCode)
+            {
+                var dto = await result.Content.ReadFromJsonAsync<UserLoginDTO>();
+                return dto;
+            }
+            return null;
+
         }
     }
 }
