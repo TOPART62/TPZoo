@@ -1,0 +1,89 @@
+﻿@using ZooBlazor.Services;
+@using ZooCore.Models;
+@page "/register"
+<h3>Register</h3>
+
+@if (!success)
+{
+    <EditForm OnValidSubmit="RegisterUser" Model="NewUser">
+        <DataAnnotationsValidator />
+        <div class="form-row">
+            <div class="form-group">
+                <label for="fname">Prénom:</label>
+                <InputText class="form-control" id="fname" placeholder="Saisir le prénom" @bind-Value="NewUser.FirstName" />
+                <small><ValidationMessage For="() => this.NewUser.FirstName" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lname">Nom:</label>
+                <InputText class="form-control" id="lname" placeholder="Saisir le nom de famille" @bind-Value="NewUser.LastName" />
+                <small><ValidationMessage For="() => this.NewUser.LastName" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="phone">Numéro de téléphone:</label>
+                <InputText class="form-control" id="fname" placeholder="0612345678" @bind-Value="NewUser.PhoneNumber" />
+                <small><ValidationMessage For="() => this.NewUser.PhoneNumber" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="address">Adresse:</label>
+                <InputText class="form-control" id="address" placeholder="1 rue de la rue 55555 Ville" @bind-Value="NewUser.Address" />
+                <small><ValidationMessage For="() => this.NewUser.Address" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <InputText class="form-control" id="email" placeholder="you@email.com" @bind-Value="NewUser.Email" />
+                <small><ValidationMessage For="() => this.NewUser.Email" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="password">Mot de passe:</label>
+                <InputText class="form-control" id="password" placeholder="*******" @bind-Value="NewUser.PassWord" />
+                <small><ValidationMessage For="() => this.NewUser.PassWord" /></small>
+            </div>
+        </div>
+        <div class="form-row">
+            <button type="submit" class="btn btn-primary" style="margin-top:10px">S'inscrire</button>
+        </div>
+    </EditForm>
+    @if (loading)
+    {
+        <img src="https://media.tenor.com/tEBoZu1ISJ8AAAAC/spinning-loading.gif">
+    }
+}else
+{
+    <h3 class="text-success">Votre compte à été crée!</h3>
+    <a href="http://localhost:5187/" class="btn btn-success">Retour à l'accueil</a>
+}
+@if (error)
+{
+    <span class="text-danger">Une erreur est survenue.</span>
+}
+
+@code {
+    [Inject]
+    public UserService UserService { get; set; }
+
+    private User NewUser = new User();
+    private bool success = false;
+    private bool error = false;
+    private bool loading = false;
+
+    private async void RegisterUser()
+    {
+        loading = true;
+        StateHasChanged();
+        bool result = await UserService.Register(NewUser);
+        if (result) success = true;
+        else error = true;
+        loading = false;
+        StateHasChanged();
+    }
+}

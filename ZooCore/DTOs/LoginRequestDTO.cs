@@ -1,7 +1,7 @@
 ﻿using ZooCore.Validators;
 using System.ComponentModel.DataAnnotations;
 
-namespace ZooAPI.DTOs
+namespace ZooCore.DTOs
 {
     public class LoginRequestDTO
     {

@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using ZooAPI.Repositories;
-using ZooAPI.DTOs;
+using ZooCore.DTOs;
 
 namespace ZooAPI.Controllers
 {
