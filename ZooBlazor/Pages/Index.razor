@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components;
 @using ZooBlazor.Services;
 @using ZooCore.Models;
+@inject NavigationManager Navigator;
 
 
 <h1>Bienvenue au Zoo M2I</h1>
@@ -64,9 +65,9 @@
                         </div>
                     </div>
                 </div>
-                    <div class="form-row">
-                        <button type="submit" class="btn btn-primary">Validation</button>
-                    </div>
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary">Validation</button>
+                </div>
             </EditForm>
         }
     }
@@ -81,7 +82,7 @@
                     </div>
                     <div class="col">
                         <h5 class="text-warning text-uppercase font-weight-bold">@animal.Name</h5>
-                        <small class="font-italic">@string.Join(", ", animal)</small>
+                        @* <small class="font-italic">@string.Join(", ", animal)</small> *@
                     </div>
                     <div class="col-2">
                         <h5 class="text-primary font-weight-bold">@animal.Espece</h5>
@@ -90,22 +91,26 @@
                         <h5 class="text-primary font-weight-bold">@animal.Age</h5>
                     </div>
 
+                   @*  <a href="@(Navigator.BaseUri)AnimalDetail/@animal.Id">Voir les détails de l'animal</a> *@
+                    <a class="btn btn-primary" href="/animals/@animal.Id">Détails</a>
                     <div class="col-2">
                         <h5 class="text-primary font-weight-bold">@animal.Description</h5>
                         <div class="row p-2">
-                            <button class="col btn btn-success" @onclick="()=>AddToCart(animal)"><i class="bi bi-basket2-fill"></i></button>
                             @if (IsAdminMode)
                             {
-                                <button class="col btn text-primary border-primary" @onclick="() => EditAnimal(animal)"><i class="bi bi-pencil-square"></i></button>
-                                <button class="col btn btn-danger" @onclick="() => DeleteAnimal(animal.Id)"><i class="bi bi-trash3"></i></button>
+                                <button class="col btn text-primary border-primary" @onclick="() => EditAnimal(animal)">Crée<i class="bi bi-pencil-square"></i></button>
+                                <button class="col btn btn-danger" @onclick="() => DeleteAnimal(animal.Id)">Supprimer<i class="bi bi-trash3"></i></button>
                             }
                         </div>
                     </div>
                 </div>
             }
         </div>
-
+       
     </div>
-
+   
 
 </div>
+
+
+

@@ -4,6 +4,7 @@ using ZooBlazor.DTOs;
 using ZooBlazor.Services;
 using System.Text.RegularExpressions;
 
+
 namespace ZooBlazor.Pages
 {
     public partial class Index
@@ -31,13 +32,7 @@ namespace ZooBlazor.Pages
             LoadingMessage = "";
         }
 
-        private void AddToCart(Animal animal)
-        {
-            if (Cart.ContainsKey(animal))
-                Cart[animal]++;
-
-        }
-
+      
         private void EditAnimal(Animal animal)
         {
             AnimalToEdit = new AnimalEditDTO()
@@ -62,6 +57,7 @@ namespace ZooBlazor.Pages
             AnimalList.RemoveAll(p => p.Id == id);
             await AnimalService.Delete(id);
         }
+      
 
         private async Task SubmitAnimal()
         {
