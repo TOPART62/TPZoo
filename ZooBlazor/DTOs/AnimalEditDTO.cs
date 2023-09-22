@@ -10,7 +10,7 @@ namespace ZooBlazor.DTOs
         [Required(ErrorMessage = "Le Nom est requis.")]
         public string? Name { get; set; }
         [Required(ErrorMessage = "L'Espece est requise.")]
-        public Espece Espece { get; set; } = Espece.Nothing;
+        public string? EspeceString { get; set; }
         [Required(ErrorMessage = "L'Age est requis.")]
         public int Age { get; set; }
         [Required(ErrorMessage = "La description est requis.")]

@@ -2,11 +2,12 @@
 @using System.Globalization;
 @using ZooBlazor.DTOs;
 @using Microsoft.AspNetCore.Components;
+@using ZooBlazor.Services;
+@using ZooCore.Models;
 
 
 <h1>Bienvenue au Zoo M2I</h1>
 <div class="container-fluid">
-    {
 
 
     <h3>Liste des Animaux</h3>
@@ -39,14 +40,14 @@
                     <div class="form-group" style="width:100%">
                         <label for="espece">Espece :</label>
                         <InputText class="form-control" id="espece" placeholder="Saisir l'espece'" @bind-Value="AnimalToEdit.EspeceString" />
-                        <small><ValidationMessage For="() => this.AnimalToEdit.AnimalString" /></small>
+                        <small><ValidationMessage For="() => this.AnimalToEdit.EspeceString" /></small>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group" style="width:100%">
                         <label for="age">Age</label>
                         <InputNumber class="form-control" id="age" placeholder="Saisir l'age" @bind-Value="AnimalToEdit.Age" />
-                        <small><ValidationMessage For="() => this.AnimalToEdit.PAge" /></small>
+                        <small><ValidationMessage For="() => this.AnimalToEdit.Age" /></small>
                     </div>
                 </div>
                 <div class="form-row">
@@ -62,6 +63,7 @@
                             <small><ValidationMessage For="() => this.AnimalToEdit.ImageURL" /></small>
                         </div>
                     </div>
+                </div>
                     <div class="form-row">
                         <button type="submit" class="btn btn-primary">Validation</button>
                     </div>

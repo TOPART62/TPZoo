@@ -9,10 +9,10 @@ namespace ZooBlazor.Services
         private readonly HttpClient _httpClient;
         private readonly string _baseApiRoute;
 
-        public AnimalService(HttpClient httpClient)
+        public AnimalService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _baseApiRoute = "/api/animals"; 
+            _baseApiRoute = configuration["APIUrlHttp"] + "/api/animals"; 
         }
 
         public async Task<List<Animal>> GetAll()

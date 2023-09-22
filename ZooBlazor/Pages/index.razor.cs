@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace ZooBlazor.Pages
 {
-    public partial class index
+    public partial class Index
     {
 #nullable disable
         [Inject]
@@ -44,7 +44,7 @@ namespace ZooBlazor.Pages
             {
                 Id = animal.Id,
                 Name = animal.Name,
-                Espece = animal.Espece,
+                EspeceString = animal.Espece.ToString(),
                 Age = animal.Age,
                 Description  = animal.Description,
                 ImageURL = Regex.Split(animal.ImageURL!, @"https:\/\/localhost:\d{1,4}").Last() 
@@ -71,7 +71,7 @@ namespace ZooBlazor.Pages
                     var animal2 = new Animal()
                     {
                         Name = AnimalToEdit!.Name,
-                        Espece = AnimalToEdit.Espece,                       
+                        Espece = (Espece)Enum.Parse(typeof(Espece), AnimalToEdit.EspeceString),                       
                         Age = AnimalToEdit.Age!,
                         Description = AnimalToEdit.Description,
                         ImageURL = Regex.Split(AnimalToEdit.ImageURL!, @"https:\/\/localhost:\d{1,4}").Last(),
@@ -82,7 +82,7 @@ namespace ZooBlazor.Pages
                 case EditionModes.Put:
                     var animal = AnimalList.Find(animal => animal.Id == AnimalToEdit!.Id)!;
                     animal.Name = AnimalToEdit!.Name;
-                    animal.Espece = AnimalToEdit.Espece;
+                    animal.Espece = (Espece)Enum.Parse(typeof(Espece), AnimalToEdit.EspeceString);
                     animal.Age = AnimalToEdit.Age;
                     animal.Description = AnimalToEdit.Description;
                     animal.ImageURL = Regex.Split(AnimalToEdit.ImageURL!, @"https:\/\/localhost:\d{1,4}").Last();
