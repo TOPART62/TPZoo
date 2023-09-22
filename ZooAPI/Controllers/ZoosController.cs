@@ -34,12 +34,7 @@ namespace ZooAPI.Controllers
 
             if (animal == null)
                 return NotFound(new{Message = "There is no Pokemon with this Id."});
-
-            return Ok(new
-            {
-                Message = "Animal found !!!",
-                Animal = animal
-            });
+            return Ok(animal);
         }
         [HttpGet("nom/{nom}")]
         public async Task<IActionResult> GetNom(string nom)
