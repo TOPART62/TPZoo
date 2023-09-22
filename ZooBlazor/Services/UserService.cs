@@ -14,7 +14,7 @@ namespace ZooBlazor.Services
         public UserService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _baseApiRoute = configuration["UserAPIUrlHttps"] + "/api/Authentification";
+            _baseApiRoute = configuration["APIUrlHttp"] + "/api/Authentication";
         }
 
         public async Task<bool> Register(User user)
@@ -27,6 +27,10 @@ namespace ZooBlazor.Services
         {
             var result = await _httpClient.PostAsJsonAsync(_baseApiRoute + $"/Login", user);
             var dto = await result.Content.ReadFromJsonAsync<UserLoginDTO>();
+            if(dto is null)
+            {
+                return "Invalid Authentication!";
+            }
             return dto.Token;
         }
     }
