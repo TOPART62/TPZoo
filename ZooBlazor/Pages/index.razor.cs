@@ -33,7 +33,7 @@ namespace ZooBlazor.Pages
             User = await _localStorage.GetItemAsync<User>("user");
             IsAdminMode = User is not null ? User.IsAdmin : false;
         }
-
+        
         private void AddToCart(Animal animal)
         {
             if (Cart.ContainsKey(animal))

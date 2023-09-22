@@ -50,7 +50,12 @@
                 <div class="form-row">
                     <div class="form-group" style="width:100%">
                         <label for="espece">Espece :</label>
-                        <InputText class="form-control" id="espece" placeholder="Saisir l'espece'" @bind-Value="AnimalToEdit.EspeceString" />
+                        <InputSelect class="form-control" id="espece" placeholder="Saisir l'espece'" @bind-Value="AnimalToEdit.EspeceString">
+                        @foreach(Espece value in Enum.GetValues(typeof(Espece)))
+                        {
+                            <option value="@(value.ToString())">@(value.ToString())</option>
+                        }
+                        </InputSelect>
                         <small><ValidationMessage For="() => this.AnimalToEdit.EspeceString" /></small>
                     </div>
                 </div>
