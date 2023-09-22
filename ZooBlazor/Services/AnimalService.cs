@@ -1,4 +1,9 @@
-﻿using System.Net.Http.Json;
+﻿using Blazored.LocalStorage;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ZooCore.Models;
 
@@ -8,11 +13,13 @@ namespace ZooBlazor.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseApiRoute;
+        private readonly ILocalStorageService _localStorage;
 
-        public AnimalService(HttpClient httpClient, IConfiguration configuration)
+        public AnimalService(HttpClient httpClient, IConfiguration configuration, ILocalStorageService localStorage)
         {
             _httpClient = httpClient;
-            _baseApiRoute = configuration["APIUrlHttp"] + "/api/animals"; 
+            _baseApiRoute = configuration["APIUrlHttp"] + "/api/animals";
+            _localStorage = localStorage;
         }
 
         public async Task<List<Animal>> GetAll()
@@ -29,20 +36,36 @@ namespace ZooBlazor.Services
 
         public async Task<bool> Post(Animal animal)
         {
-            var result = await _httpClient.PostAsJsonAsync(_baseApiRoute, animal);
-            return result.IsSuccessStatusCode;
+            var stringAnimal = JsonConvert.SerializeObject(animal);
+            var request = new HttpRequestMessage(HttpMethod.Post, _baseApiRoute);
+            request.Content = new StringContent(stringAnimal, Encoding.UTF8, "application/json");
+            return await SendRequest(request);
         }
 
         public async Task<bool> Put(Animal animal)
         {
-            var result = await _httpClient.PutAsJsonAsync(_baseApiRoute + $"/{animal.Id}", animal);
-            return result.IsSuccessStatusCode;
+            var stringAnimal = JsonConvert.SerializeObject(animal);
+            var request = new HttpRequestMessage(HttpMethod.Put, _baseApiRoute);
+            request.Content = new StringContent(stringAnimal, Encoding.UTF8, "application/json");
+            return await SendRequest(request);
         }
 
         public async Task<bool> Delete(int id)
         {
-            var result = await _httpClient.DeleteAsync(_baseApiRoute + $"/{id}");
+            var request = new HttpRequestMessage(HttpMethod.Delete, _baseApiRoute + $"/{id}");
+            return await SendRequest(request);
+        }
+
+        public async Task<bool> SendRequest(HttpRequestMessage request)
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetJWT());
+            var result = await _httpClient.SendAsync(request);
             return result.IsSuccessStatusCode;
+        }
+
+        private async Task<string> GetJWT()
+        {
+            return await _localStorage.GetItemAsync<string>("jwt");
         }
     }
 }

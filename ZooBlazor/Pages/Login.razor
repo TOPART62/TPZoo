@@ -1,13 +1,16 @@
-﻿@using ZooBlazor.Services;
+﻿@using ZooBlazor.DTOs;
+@using ZooBlazor.Services;
 @using ZooCore.DTOs;
+@using ZooCore.Models;
 
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage;
 @inject NavigationManager Navigator;
 
 @page "/login"
 
 <h3>Login</h3>
 
-@if (!success)
+@if (!success || LoggedIn is null)
 {
     <EditForm OnValidSubmit="LoginUser" Model="User">
         <DataAnnotationsValidator />
@@ -29,10 +32,16 @@
             <button type="submit" class="btn btn-primary" style="margin-top:10px">Login</button>
         </div>
     </EditForm>
+    <h5>Pas de compte? Cliquez ici</h5>
+    <a href="@(Navigator.BaseUri)register" class="btn btn-primary">S'inscrire</a>
 }
-else
+else if(success)
 {
-    <h3>Connexion OK !!! Votre token est @token</h3>
+    <h3>Connexion OK !!! Vous @((LoggedIn.IsAdmin ? "êtes admin" : @"n'êtes pas admin")).</h3>
+    <a href="@Navigator.BaseUri" class="btn btn-success">Retour ...</a>
+} else if(LoggedIn is not null)
+{
+    <h3>Vous etes déjà connecté(e), @LoggedIn.FullName !</h3>
     <a href="@Navigator.BaseUri" class="btn btn-success">Retour ...</a>
 }
 @if (error)
@@ -47,14 +56,33 @@ else
     private LoginRequestDTO User = new LoginRequestDTO();
     private bool success = false;
     private bool error = false;
-    string token;
+    private User LoggedIn;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var dto = await LocalStorage.GetItemAsync<UserLoginDTO>("user");
+        if(dto is not null) LoggedIn = dto.User;
+        StateHasChanged();
+    }
 
     private async void LoginUser()
     {
-        token = await UserService.Login(User);
-        if (token.Equals("Invalid Authentication!"))
+        var result = await UserService.Login(User);
+        if (result is null)
+        {
             error = true;
+            success = false;
+        }
+
         else
+        {
             success = true;
+            error = false;
+            LoggedIn = result.User;
+            await LocalStorage.SetItemAsync("user", LoggedIn);
+            await LocalStorage.SetItemAsync("jwt", result.Token);
+        }
+        StateHasChanged();
+
     }
 }
